@@ -241,7 +241,9 @@ def repeat_fixed_layout(input_pdf, output_pdf, gap_mm, paper_w_mm, paper_h_mm, b
                 target = fitz.Rect(x, y, x + p["w_pt"], y + p["h_pt"])
                 page.show_pdf_page(target, src_doc, data["page_index"], clip=bat_rect)
 
-        draw_trim_marks(page, mx, my, bat_w, bat_h, gap, rows, cols, is_circle, cols_odd)
+        # Trim marks (dau cat) chi ap dung cho hinh chu nhat/vuong, KHONG ve cho hinh tron
+        if not is_circle:
+            draw_trim_marks(page, mx, my, bat_w, bat_h, gap, rows, cols, is_circle, cols_odd)
 
         # Ốc bế (dấu định vị máy bế) + Lệnh sản xuất - chèn lên TRANG NỘI DUNG (trang 1)
         draw_registration_marks(page, pw, ph, oc_type)
@@ -250,7 +252,8 @@ def repeat_fixed_layout(input_pdf, output_pdf, gap_mm, paper_w_mm, paper_h_mm, b
         # Trang khuôn
         tmpl = dst_doc.new_page(width=pw, height=ph)
         draw_grid_lines_on_page(tmpl, pw, ph, mx, my, bat_w, bat_h, gap, rows, cols, is_circle, cols_odd)
-        draw_trim_marks(tmpl, mx, my, bat_w, bat_h, gap, rows, cols, is_circle, cols_odd)
+        if not is_circle:
+            draw_trim_marks(tmpl, mx, my, bat_w, bat_h, gap, rows, cols, is_circle, cols_odd)
 
         # Thông tin
         info1 = f"Khoang cach tem: {gap_mm}mm"
