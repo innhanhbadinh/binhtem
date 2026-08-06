@@ -245,8 +245,9 @@ def repeat_fixed_layout(input_pdf, output_pdf, gap_mm, paper_w_mm, paper_h_mm, b
         if not is_circle:
             draw_trim_marks(page, mx, my, bat_w, bat_h, gap, rows, cols, is_circle, cols_odd)
 
-        # Ốc bế (dấu định vị máy bế) + Lệnh sản xuất - chèn lên TRANG NỘI DUNG (trang 1)
+        # Ốc bế (dấu định vị máy bế) - chèn lên TAT CA cac trang (noi dung + khuon)
         draw_registration_marks(page, pw, ph, oc_type)
+        # Lệnh sản xuất - chi chen len trang noi dung (trang in that su)
         insert_production_text(page, production_text, pw)
 
         # Trang khuôn
@@ -254,6 +255,7 @@ def repeat_fixed_layout(input_pdf, output_pdf, gap_mm, paper_w_mm, paper_h_mm, b
         draw_grid_lines_on_page(tmpl, pw, ph, mx, my, bat_w, bat_h, gap, rows, cols, is_circle, cols_odd)
         if not is_circle:
             draw_trim_marks(tmpl, mx, my, bat_w, bat_h, gap, rows, cols, is_circle, cols_odd)
+        draw_registration_marks(tmpl, pw, ph, oc_type)
 
         # Thông tin
         info1 = f"Khoang cach tem: {gap_mm}mm"
