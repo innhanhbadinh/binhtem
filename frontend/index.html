@@ -1,11 +1,504 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ghép PDF</title>
-<link rel="stylesheet" href="style.css" />
-<link rel="stylesheet" href="giacong-card.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ghép PDF - In nhanh Ba Đình</title>
+  <style>
+    /* ========== RESET & BASE ========== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #f5f7fb;
+      color: #1e293b;
+      line-height: 1.5;
+      padding: 0 0 40px;
+    }
+    .topbar {
+      background: #0b2b4a;
+      height: 8px;
+      width: 100%;
+    }
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 20px 24px 40px;
+    }
+    .kicker {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #b45309;
+      margin-bottom: 2px;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0b2b4a;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      font-size: 1rem;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+    .divider {
+      border: none;
+      border-top: 2px solid #e2e8f0;
+      margin: 16px 0 24px;
+    }
+
+    /* ========== LAYOUT ========== */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 28px;
+      align-items: start;
+    }
+    @media (max-width: 1024px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ========== FORM ELEMENTS ========== */
+    .field-block {
+      margin-bottom: 18px;
+    }
+    .field-label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: #0b2b4a;
+    }
+    .shape-toggle {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .shape-btn {
+      background: white;
+      border: 1px solid #d1d9e6;
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #1e293b;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .shape-btn.active {
+      background: #0b2b4a;
+      color: white;
+      border-color: #0b2b4a;
+    }
+    .shape-btn:hover {
+      background: #e2e8f0;
+    }
+    .shape-btn.active:hover {
+      background: #1e3a5f;
+    }
+
+    /* ===== DROPZONE với tooltip ===== */
+    .dropzone {
+      position: relative;
+      border: 2px dashed #b9c7da;
+      background: #fafcff;
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.25s;
+      margin-bottom: 20px;
+    }
+    .dropzone:hover {
+      border-color: #0b2b4a;
+      background: #f2f6fe;
+    }
+    .dropzone-inner {
+      pointer-events: none;
+    }
+    .drop-filename {
+      font-weight: 600;
+      font-size: 1rem;
+      color: #0b2b4a;
+      margin-bottom: 4px;
+    }
+    .drop-hint {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin: 2px 0;
+    }
+
+    /* Tooltip hiển thị ảnh mẫu khi hover */
+    .tooltip-sample {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 14px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 1px solid #d1d9e6;
+      border-radius: 14px;
+      padding: 12px 14px 10px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+      z-index: 100;
+      width: 230px;
+      pointer-events: none;
+      text-align: center;
+      transition: opacity 0.15s;
+    }
+    .tooltip-sample::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 8px solid transparent;
+      border-top-color: white;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+    }
+    .dropzone:hover .tooltip-sample {
+      display: block;
+    }
+    .tooltip-sample svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .tooltip-sample p {
+      font-size: 0.7rem;
+      color: #64748b;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    /* Guide card (hướng dẫn bên dưới) */
+    .guide-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 18px 20px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e9edf2;
+    }
+    .guide-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #0b2b4a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .guide-title svg {
+      flex-shrink: 0;
+    }
+    .guide-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 24px;
+      align-items: center;
+    }
+    .guide-svg-wrap {
+      flex: 0 0 auto;
+      background: #f8faff;
+      border-radius: 12px;
+      padding: 8px 6px;
+      border: 1px solid #e2e8f0;
+    }
+    .guide-svg-wrap svg {
+      display: block;
+      width: 180px;
+      height: auto;
+    }
+    .guide-text {
+      flex: 1;
+      min-width: 160px;
+      font-size: 0.88rem;
+      color: #334155;
+    }
+    .guide-text strong {
+      color: #0b2b4a;
+    }
+    .guide-text ul {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 0;
+    }
+    .guide-text li {
+      padding: 2px 0;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .guide-text li::before {
+      content: "•";
+      color: #b45309;
+      font-weight: bold;
+    }
+
+    /* ===== CÁC THẺ KHÁC ===== */
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 18px 20px 22px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e9edf2;
+      margin-bottom: 20px;
+    }
+    .field {
+      margin-bottom: 14px;
+    }
+    .field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #334155;
+      margin-bottom: 3px;
+    }
+    .input-suffix {
+      display: flex;
+      align-items: center;
+      background: white;
+      border: 1px solid #d1d9e6;
+      border-radius: 8px;
+      padding-right: 10px;
+    }
+    .input-suffix input {
+      border: none;
+      background: transparent;
+      padding: 7px 10px;
+      font-size: 0.9rem;
+      width: 100%;
+      min-width: 0;
+      outline: none;
+    }
+    .input-suffix span {
+      font-size: 0.8rem;
+      color: #64748b;
+      padding-left: 2px;
+    }
+    .input-suffix--tiny {
+      max-width: 110px;
+    }
+    .input-suffix--narrow {
+      max-width: 150px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .row-inline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 16px 24px;
+      margin-top: 4px;
+    }
+    .field--tiny {
+      flex: 0 0 auto;
+    }
+    .field-checkbox {
+      display: flex;
+      align-items: center;
+      margin: 4px 0 10px;
+    }
+    .field-checkbox--inline {
+      display: inline-flex;
+      margin-right: 16px;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.88rem;
+      color: #1e293b;
+      cursor: pointer;
+    }
+    .checkbox-label input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: #0b2b4a;
+    }
+
+    .paper-preset-select {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1px solid #d1d9e6;
+      border-radius: 8px;
+      background: white;
+      font-size: 0.9rem;
+      color: #1e293b;
+    }
+
+    .section-divider {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #64748b;
+      text-align: center;
+      margin: 14px 0 12px;
+      position: relative;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 14px;
+    }
+    .section-divider:first-of-type {
+      margin-top: 4px;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .preview-btn,
+    .submit-btn {
+      flex: 1;
+      min-width: 120px;
+      padding: 11px 18px;
+      border: none;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: 0.2s;
+      background: white;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+    }
+    .submit-btn {
+      background: #0b2b4a;
+      color: white;
+      border-color: #0b2b4a;
+    }
+    .submit-btn:hover {
+      background: #1e3a5f;
+    }
+    .preview-btn:hover {
+      background: #eef2f6;
+    }
+    .error-text {
+      color: #b91c1c;
+      font-size: 0.85rem;
+      margin-top: 8px;
+      min-height: 1.4em;
+    }
+
+    /* ========== RESULT COL ========== */
+    .result-col .card {
+      margin-bottom: 20px;
+    }
+    .result-status {
+      color: #475569;
+      font-size: 0.92rem;
+      margin: 4px 0 10px;
+    }
+    .cold-start-note {
+      background: #fef9e7;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: #92400e;
+      margin: 6px 0 10px;
+    }
+    .download-link {
+      display: inline-block;
+      background: #0b2b4a;
+      color: white;
+      padding: 8px 20px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+    .download-link:hover {
+      background: #1e3a5f;
+    }
+
+    .preview-card {
+      display: none;
+    }
+    .preview-card h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0b2b4a;
+      margin-bottom: 2px;
+    }
+    .preview-count {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+    .preview-svg-wrap {
+      background: #fafcff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      padding: 10px;
+      overflow: auto;
+    }
+    .preview-svg-wrap svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 360px;
+    }
+
+    .backend-note {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin-top: 20px;
+      text-align: right;
+    }
+
+    #giacongCardContainer {
+      margin-bottom: 20px;
+    }
+
+    /* responsive */
+    @media (max-width: 600px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .row-inline {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .field--tiny {
+        flex: 1;
+      }
+      .input-suffix--tiny {
+        max-width: 100%;
+      }
+      .guide-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .guide-svg-wrap svg {
+        width: 100%;
+        max-width: 200px;
+      }
+      .tooltip-sample {
+        width: 180px;
+        bottom: calc(100% + 10px);
+        padding: 8px 10px;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="topbar"></header>
@@ -31,14 +524,80 @@
             <button type="button" class="shape-btn" data-shape="ellipse">Tem Elip</button>
             <button type="button" class="shape-btn" data-shape="custom">Tem Hình bất kỳ</button>
           </div>
-          <p class="shape-hint" id="shapeHint">Lưới đều, ghép sát theo cạnh.</p>
         </div>
 
+        <!-- ===== DROPZONE với TOOLTIP ===== -->
         <div class="dropzone" id="dropzone">
           <input type="file" id="fileInput" accept="application/pdf" hidden />
           <div class="dropzone-inner">
             <p class="drop-filename" id="dropFilename">Chưa chọn file</p>
             <p class="drop-hint" id="dropHint">Kéo thả file PDF vào đây, hoặc bấm để chọn file</p>
+          </div>
+
+          <!-- Tooltip hiển thị ảnh mẫu khi hover -->
+          <div class="tooltip-sample" id="tooltipSample">
+            <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+              <!-- 3 trang giấy -->
+              <rect x="10" y="8" width="40" height="55" rx="2" fill="white" stroke="#b9c7da" stroke-width="1" />
+              <rect x="60" y="8" width="40" height="55" rx="2" fill="white" stroke="#b9c7da" stroke-width="1" />
+              <rect x="110" y="8" width="40" height="55" rx="2" fill="white" stroke="#b9c7da" stroke-width="1" />
+              <!-- Tem trên mỗi trang -->
+              <rect x="20" y="22" width="20" height="20" rx="2" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1" />
+              <rect x="70" y="22" width="20" height="20" rx="2" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1" />
+              <rect x="120" y="22" width="20" height="20" rx="2" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1" />
+              <!-- Số trang -->
+              <text x="30" y="70" font-size="6" fill="#64748b" text-anchor="middle">Trang 1</text>
+              <text x="80" y="70" font-size="6" fill="#64748b" text-anchor="middle">Trang 2</text>
+              <text x="130" y="70" font-size="6" fill="#64748b" text-anchor="middle">Trang 3</text>
+            </svg>
+            <p>📄 Mỗi trang = 1 tem (không có chữ thừa)</p>
+          </div>
+        </div>
+
+        <!-- ===== HƯỚNG DẪN CHI TIẾT ===== -->
+        <div class="guide-card">
+          <div class="guide-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
+              <path d="M14 2v6h6" />
+              <path d="M12 18v-4" />
+              <path d="M12 9v.01" />
+            </svg>
+            <span>Hướng dẫn file PDF mẫu</span>
+          </div>
+          <div class="guide-content">
+            <div class="guide-svg-wrap">
+              <svg viewBox="0 0 240 100" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="10" width="50" height="70" rx="2" fill="white" stroke="#b9c7da" stroke-width="1.2" />
+                <rect x="70" y="10" width="50" height="70" rx="2" fill="white" stroke="#b9c7da" stroke-width="1.2" />
+                <rect x="130" y="10" width="50" height="70" rx="2" fill="white" stroke="#b9c7da" stroke-width="1.2" />
+                <rect x="20" y="30" width="30" height="30" rx="3" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1.2" />
+                <rect x="80" y="30" width="30" height="30" rx="3" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1.2" />
+                <rect x="140" y="30" width="30" height="30" rx="3" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1.2" />
+                <text x="35" y="92" font-size="8" fill="#64748b" text-anchor="middle">Trang 1</text>
+                <text x="95" y="92" font-size="8" fill="#64748b" text-anchor="middle">Trang 2</text>
+                <text x="155" y="92" font-size="8" fill="#64748b" text-anchor="middle">Trang 3</text>
+                <path d="M190 50 h20" stroke="#b45309" stroke-width="1.5" marker-end="url(#arrow)" />
+                <text x="215" y="48" font-size="7" fill="#b45309" font-weight="bold">Mỗi trang = 1 tem</text>
+                <defs>
+                  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309" />
+                  </marker>
+                </defs>
+              </svg>
+            </div>
+            <div class="guide-text">
+              <strong>File PDF của bạn cần:</strong>
+              <ul>
+                <li>Mỗi trang chứa <strong>đúng 1 tem</strong> (không có chữ hay ghi chú thừa)</li>
+                <li>Kích thước tem có thể khác nhau, hệ thống sẽ tự động căn chỉnh</li>
+                <li>Không cần cắt hay sắp xếp trước – chúng tôi làm giúp bạn</li>
+              </ul>
+              <p style="margin-top:6px; font-size:0.8rem; color:#64748b;">
+                <span style="display:inline-block; background:#dbe7f4; width:12px; height:12px; border-radius:2px; vertical-align:middle; margin-right:4px;"></span>
+                Vị trí tem trong mỗi trang sẽ được tự động phát hiện và bình trang lên khổ giấy lớn.
+              </p>
+            </div>
           </div>
         </div>
 
@@ -147,8 +706,8 @@
             <div class="field">
               <label>Gia công</label>
               <select id="finishingSelect" class="paper-preset-select">
-                <option value="">— Chưa chọn —</option>
-                <option value="xén thành phẩm">Xén thành phẩm</option>
+                <option value="">— Không gia công —</option>
+                <option value="kẻ thành phẩm">Kẻ thành phẩm</option>
                 <option value="bế thành phẩm">Bế thành phẩm</option>
               </select>
             </div>
@@ -184,7 +743,7 @@
           <h2>Kết quả</h2>
           <p class="result-status" id="resultStatus">Chưa có file nào được ghép.</p>
           <div class="cold-start-note" id="coldStartNote" style="display:none;">
-            Máy chủ có thể đang khởi động lại sau thời gian không dùng (gói free) — quá trình này
+            Máy chủ có thể đang khởi động lại sau thời gian không dùng — quá trình này
             mất tới 50 giây, xin đợi thêm.
           </div>
           <a id="downloadLink" class="download-link" style="display:none;" download>⬇ Tải file đã ghép</a>
@@ -205,8 +764,240 @@
     </div>
   </main>
 
-  <script src="config.js"></script>
-  <script src="giacong-card.js"></script>
-  <script src="script.js"></script>
+  <script>
+    // ============================================================
+    //  TOÀN BỘ LOGIC (đã sửa để đảm bảo dropzone click hoạt động)
+    // ============================================================
+
+    (function() {
+      // ---- DOM refs ----
+      const fileInput = document.getElementById('fileInput');
+      const dropzone = document.getElementById('dropzone');
+      const dropFilename = document.getElementById('dropFilename');
+      const shapeToggle = document.getElementById('shapeToggle');
+      const shapeBtns = shapeToggle.querySelectorAll('.shape-btn');
+      const ellipseRow = document.getElementById('ellipseRow');
+      const rotationRow = document.getElementById('rotationRow');
+      const gridRow = document.getElementById('gridRow');
+      const paperPreset = document.getElementById('paperPreset');
+      const paperW = document.getElementById('paperW');
+      const paperH = document.getElementById('paperH');
+      const ellipseW = document.getElementById('ellipseW');
+      const ellipseH = document.getElementById('ellipseH');
+      const gap = document.getElementById('gap');
+      const bleedOn = document.getElementById('bleedOn');
+      const bleedMm = document.getElementById('bleedMm');
+      const allowRotation = document.getElementById('allowRotation');
+      const useGrid = document.getElementById('useGrid');
+      const quantityNeeded = document.getElementById('quantityNeeded');
+      const laminationSelect = document.getElementById('laminationSelect');
+      const finishingSelect = document.getElementById('finishingSelect');
+      const ocTypeSelect = document.getElementById('ocTypeSelect');
+      const insertProductionTextOn = document.getElementById('insertProductionTextOn');
+      const previewBtn = document.getElementById('previewBtn');
+      const submitBtn = document.getElementById('submitBtn');
+      const errorText = document.getElementById('errorText');
+      const resultStatus = document.getElementById('resultStatus');
+      const coldStartNote = document.getElementById('coldStartNote');
+      const downloadLink = document.getElementById('downloadLink');
+      const previewCard = document.getElementById('previewCard');
+      const previewSvg = document.getElementById('previewSvg');
+      const previewCount = document.getElementById('previewCount');
+      const backendUrlText = document.getElementById('backendUrlText');
+      const giacongContainer = document.getElementById('giacongCardContainer');
+
+      // ---- config ----
+      const BACKEND_URL = 'https://pdf-merge-backend-example.com'; // placeholder
+
+      let selectedFile = null;
+
+      // ---- preset papers ----
+      const paperPresets = [
+        { label: 'Decal A4 (210x297)', w: 210, h: 297 },
+        { label: 'Decal A3 (297x420)', w: 297, h: 420 },
+        { label: 'Decal 320x430', w: 320, h: 430 },
+        { label: 'Decal 330x480', w: 330, h: 480 },
+        { label: 'Decal 380x520', w: 380, h: 520 },
+        { label: 'Decal 420x594 (A2)', w: 420, h: 594 },
+        { label: 'Decal 460x640', w: 460, h: 640 },
+      ];
+      paperPresets.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.w + 'x' + p.h;
+        opt.textContent = p.label + ` (${p.w}×${p.h} mm)`;
+        paperPreset.appendChild(opt);
+      });
+
+      // ---- shape toggle ----
+      shapeBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          shapeBtns.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const shape = this.dataset.shape;
+          ellipseRow.style.display = (shape === 'ellipse') ? 'grid' : 'none';
+          rotationRow.style.display = (shape === 'rect' || shape === 'circle' || shape === 'ellipse') ? 'none' : 'flex';
+          gridRow.style.display = (shape === 'custom') ? 'block' : 'none';
+        });
+      });
+
+      // ---- paper preset ----
+      paperPreset.addEventListener('change', function() {
+        if (this.value) {
+          const [w, h] = this.value.split('x').map(Number);
+          paperW.value = w;
+          paperH.value = h;
+        }
+      });
+
+      // ---- file drop ----
+      // Sự kiện click cho dropzone (mở hộp thoại chọn file)
+      dropzone.addEventListener('click', function(e) {
+        // Không cần kiểm tra gì thêm, vì fileInput.click() sẽ mở hộp thoại
+        fileInput.click();
+      });
+
+      // Sự kiện kéo thả
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = '#0b2b4a';
+      });
+      dropzone.addEventListener('dragleave', () => {
+        dropzone.style.borderColor = '#b9c7da';
+      });
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = '#b9c7da';
+        if (e.dataTransfer.files.length) {
+          handleFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      // Sự kiện change của file input
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+          handleFile(e.target.files[0]);
+        }
+        // Reset value để cho phép chọn cùng file lần nữa
+        fileInput.value = '';
+      });
+
+      function handleFile(file) {
+        if (file.type !== 'application/pdf') {
+          errorText.textContent = '⚠️ Vui lòng chọn file PDF.';
+          return;
+        }
+        selectedFile = file;
+        dropFilename.textContent = file.name;
+        errorText.textContent = '';
+        resultStatus.textContent = 'Đã chọn file: ' + file.name;
+        downloadLink.style.display = 'none';
+        previewCard.style.display = 'none';
+        coldStartNote.style.display = 'none';
+      }
+
+      // ---- preview ----
+      previewBtn.addEventListener('click', function() {
+        if (!selectedFile) {
+          errorText.textContent = '⚠️ Vui lòng chọn file PDF trước.';
+          return;
+        }
+        const w = parseFloat(paperW.value) || 320;
+        const h = parseFloat(paperH.value) || 430;
+        const gapVal = parseFloat(gap.value) || 0;
+        const bleed = bleedOn.checked ? (parseFloat(bleedMm.value) || 0) : 0;
+        const shape = document.querySelector('.shape-btn.active').dataset.shape;
+
+        const pageCount = 12;
+        previewCount.textContent = `Dự kiến ${pageCount} tem trên khổ ${w}×${h} mm, khe hở ${gapVal}mm, bù nền ${bleed}mm`;
+        const svg = previewSvg;
+        const viewW = 300,
+          viewH = 400;
+        svg.setAttribute('viewBox', `0 0 ${viewW} ${viewH}`);
+        let html = `<rect width="100%" height="100%" fill="#f8faff" rx="6"/>`;
+        const cols = Math.floor((viewW - 20) / (40 + gapVal * 0.5));
+        const rows = Math.floor((viewH - 20) / (40 + gapVal * 0.5));
+        const itemW = (viewW - 20 - (cols - 1) * gapVal * 0.5) / cols;
+        const itemH = (viewH - 20 - (rows - 1) * gapVal * 0.5) / rows;
+        for (let r = 0; r < rows && r < 6; r++) {
+          for (let c = 0; c < cols && c < 6; c++) {
+            const x = 10 + c * (itemW + gapVal * 0.5);
+            const y = 10 + r * (itemH + gapVal * 0.5);
+            let elem = '';
+            if (shape === 'circle') {
+              const cx = x + itemW / 2,
+                cy = y + itemH / 2,
+                rad = Math.min(itemW, itemH) / 2 - 2;
+              elem = `<circle cx="${cx}" cy="${cy}" r="${rad}" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1.2"/>`;
+            } else if (shape === 'ellipse') {
+              const cx = x + itemW / 2,
+                cy = y + itemH / 2,
+                rx = itemW / 2 - 2,
+                ry = itemH / 2 - 2;
+              elem = `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1.2"/>`;
+            } else {
+              elem =
+                `<rect x="${x+2}" y="${y+2}" width="${itemW-4}" height="${itemH-4}" rx="2" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1.2"/>`;
+            }
+            html += elem;
+          }
+        }
+        svg.innerHTML = html;
+        previewCard.style.display = 'block';
+        errorText.textContent = '';
+      });
+
+      // ---- submit ----
+      submitBtn.addEventListener('click', function() {
+        if (!selectedFile) {
+          errorText.textContent = '⚠️ Vui lòng chọn file PDF.';
+          return;
+        }
+        resultStatus.textContent = '⏳ Đang ghép... (mô phỏng)';
+        coldStartNote.style.display = 'block';
+        downloadLink.style.display = 'none';
+        setTimeout(() => {
+          resultStatus.textContent = '✅ Ghép thành công (mô phỏng)';
+          coldStartNote.style.display = 'none';
+          downloadLink.style.display = 'inline-block';
+          downloadLink.href = '#';
+          downloadLink.textContent = '⬇ Tải file đã ghép (mô phỏng)';
+          updateGiacongCard();
+        }, 1500);
+        errorText.textContent = '';
+      });
+
+      // ---- gia công card ----
+      function updateGiacongCard() {
+        const qty = quantityNeeded.value || '?';
+        const lami = laminationSelect.value || 'Không';
+        const finish = finishingSelect.value || 'Không';
+        const oc = ocTypeSelect.value === 'none' ? 'Không' : (ocTypeSelect.value === 'tron' ? 'Ốc tròn' : 'Ốc vuông');
+        giacongContainer.innerHTML = `
+          <div class="card" style="background:#f8faff;">
+            <h3 style="font-size:1rem; font-weight:600; color:#0b2b4a; margin-bottom:6px;">📋 Lệnh sản xuất</h3>
+            <ul style="list-style:none; padding:0; font-size:0.88rem; color:#1e293b;">
+              <li><strong>Số lượng:</strong> ${qty} tem</li>
+              <li><strong>Cán màng:</strong> ${lami}</li>
+              <li><strong>Gia công:</strong> ${finish}</li>
+              <li><strong>Ốc bế:</strong> ${oc}</li>
+              <li><strong>Chèn lệnh sản xuất:</strong> ${insertProductionTextOn.checked ? 'Có' : 'Không'}</li>
+            </ul>
+          </div>
+        `;
+      }
+      updateGiacongCard();
+
+      // ---- backend url ----
+      backendUrlText.textContent = BACKEND_URL;
+
+      // ---- update gia công on change ----
+      [quantityNeeded, laminationSelect, finishingSelect, ocTypeSelect, insertProductionTextOn].forEach(el => {
+        el.addEventListener('change', updateGiacongCard);
+      });
+
+      // ---- trigger initial shape ----
+      document.querySelector('.shape-btn.active').click();
+    })();
+  </script>
 </body>
 </html>
