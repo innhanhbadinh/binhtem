@@ -1,0 +1,10 @@
+# File cau hinh Render.com (tuy chon) - Render se tu doc file nay khi ban
+# tao "Blueprint" tro toi repo. Neu khong dung Blueprint, chi can tao thu cong
+# 1 Web Service voi Build/Start command nhu ben duoi.
+services:
+  - type: web
+    name: ghep-pdf-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT

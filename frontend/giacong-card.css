@@ -1,0 +1,148 @@
+.giacong-card {
+  --gc-border: #e4e2d8;
+  --gc-text: #1c1c1a;
+  --gc-muted: #8a887f;
+  --gc-accent: #2f6f4f;
+  --gc-bg: #ffffff;
+  --gc-bg-soft: #fafaf6;
+
+  background: var(--gc-bg);
+  border: 1px solid var(--gc-border);
+  border-radius: 10px;
+  overflow: hidden;
+  color: var(--gc-text);
+  font-size: 0.9rem;
+}
+
+.giacong-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--gc-border);
+}
+
+.giacong-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-right: auto;
+}
+
+.giacong-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--gc-text);
+  cursor: pointer;
+  user-select: none;
+}
+
+.giacong-checkbox input {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.giacong-body {
+  padding: 14px 16px;
+}
+
+.giacong-text-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.giacong-text {
+  margin: 0;
+  flex: 1;
+  white-space: pre-line;
+  line-height: 1.5;
+  font-size: 0.88rem;
+  color: var(--gc-text);
+}
+
+.giacong-copy-btn {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: 1px solid var(--gc-border);
+  background: var(--gc-bg-soft);
+  color: var(--gc-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.giacong-copy-btn:hover {
+  background: #eef4f0;
+  color: var(--gc-accent);
+  border-color: var(--gc-accent);
+}
+
+.giacong-copy-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.giacong-copy-toast {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  background: var(--gc-text);
+  color: #fff;
+  font-size: 0.72rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+.giacong-copy-toast.show {
+  opacity: 1;
+}
+
+.giacong-note-section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--gc-border);
+}
+
+.giacong-note-label {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--gc-muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.giacong-note-input {
+  width: 100%;
+  min-height: 48px;
+  resize: vertical;
+  border: 1px solid var(--gc-border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--gc-text);
+  background: var(--gc-bg-soft);
+  box-sizing: border-box;
+}
+
+.giacong-note-input:focus {
+  outline: none;
+  border-color: var(--gc-accent);
+  background: #fff;
+}
+
+.giacong-note-input::placeholder {
+  color: #b3b1a6;
+}

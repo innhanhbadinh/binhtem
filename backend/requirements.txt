@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-multipart
+PyMuPDF
+numpy
+shapely
+scipy
+pillow
+opencv-python-headless
+gspread
+google-auth
