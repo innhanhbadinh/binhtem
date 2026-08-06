@@ -17,6 +17,16 @@ const gridRow = document.getElementById("gridRow");
 const bleedOn = document.getElementById("bleedOn");
 
 const dropzone = document.getElementById("dropzone");
+
+const sampleGuideToggle = document.getElementById("sampleGuideToggle");
+const sampleGuidePanel = document.getElementById("sampleGuidePanel");
+sampleGuideToggle.addEventListener("click", () => {
+  const isHidden = sampleGuidePanel.style.display === "none";
+  sampleGuidePanel.style.display = isHidden ? "block" : "none";
+  sampleGuideToggle.textContent = isHidden
+    ? "📄 Ẩn hướng dẫn chuẩn bị file PDF mẫu"
+    : "📄 Xem hướng dẫn chuẩn bị file PDF mẫu";
+});
 const fileInput = document.getElementById("fileInput");
 const dropFilename = document.getElementById("dropFilename");
 const dropHint = document.getElementById("dropHint");
