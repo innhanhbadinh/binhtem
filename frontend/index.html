@@ -125,6 +125,7 @@
       border-color: #0b2b4a;
       background: #f2f6fe;
     }
+    /* Quan trọng: đảm bảo các phần tử con không chặn click */
     .dropzone-inner {
       pointer-events: none;
     }
@@ -140,7 +141,7 @@
       margin: 2px 0;
     }
 
-    /* Tooltip hiển thị ảnh mẫu khi hover */
+    /* Tooltip */
     .tooltip-sample {
       display: none;
       position: absolute;
@@ -183,7 +184,7 @@
       font-weight: 500;
     }
 
-    /* Guide card (hướng dẫn bên dưới) */
+    /* Guide card */
     .guide-card {
       background: #ffffff;
       border-radius: 16px;
@@ -526,26 +527,24 @@
           </div>
         </div>
 
-        <!-- ===== DROPZONE với TOOLTIP ===== -->
+        <!-- ===== DROPZONE ===== -->
         <div class="dropzone" id="dropzone">
-          <input type="file" id="fileInput" accept="application/pdf" hidden />
+          <!-- Input file ẩn -->
+          <input type="file" id="fileInput" accept="application/pdf" style="display:none;" />
           <div class="dropzone-inner">
             <p class="drop-filename" id="dropFilename">Chưa chọn file</p>
             <p class="drop-hint" id="dropHint">Kéo thả file PDF vào đây, hoặc bấm để chọn file</p>
           </div>
 
-          <!-- Tooltip hiển thị ảnh mẫu khi hover -->
+          <!-- Tooltip -->
           <div class="tooltip-sample" id="tooltipSample">
             <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
-              <!-- 3 trang giấy -->
               <rect x="10" y="8" width="40" height="55" rx="2" fill="white" stroke="#b9c7da" stroke-width="1" />
               <rect x="60" y="8" width="40" height="55" rx="2" fill="white" stroke="#b9c7da" stroke-width="1" />
               <rect x="110" y="8" width="40" height="55" rx="2" fill="white" stroke="#b9c7da" stroke-width="1" />
-              <!-- Tem trên mỗi trang -->
               <rect x="20" y="22" width="20" height="20" rx="2" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1" />
               <rect x="70" y="22" width="20" height="20" rx="2" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1" />
               <rect x="120" y="22" width="20" height="20" rx="2" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1" />
-              <!-- Số trang -->
               <text x="30" y="70" font-size="6" fill="#64748b" text-anchor="middle">Trang 1</text>
               <text x="80" y="70" font-size="6" fill="#64748b" text-anchor="middle">Trang 2</text>
               <text x="130" y="70" font-size="6" fill="#64748b" text-anchor="middle">Trang 3</text>
@@ -554,7 +553,7 @@
           </div>
         </div>
 
-        <!-- ===== HƯỚNG DẪN CHI TIẾT ===== -->
+        <!-- ===== HƯỚNG DẪN ===== -->
         <div class="guide-card">
           <div class="guide-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2">
@@ -601,6 +600,7 @@
           </div>
         </div>
 
+        <!-- ===== CÁC THÔNG SỐ ===== -->
         <div class="card">
           <div class="field">
             <label>Khổ giấy có sẵn</label>
@@ -737,7 +737,7 @@
         <p class="error-text" id="errorText"></p>
       </section>
 
-      <!-- CỘT PHẢI: KẾT QUẢ + XEM TRƯỚC -->
+      <!-- CỘT PHẢI -->
       <aside class="result-col">
         <div class="card result-card">
           <h2>Kết quả</h2>
@@ -765,10 +765,6 @@
   </main>
 
   <script>
-    // ============================================================
-    //  TOÀN BỘ LOGIC (đã sửa để đảm bảo dropzone click hoạt động)
-    // ============================================================
-
     (function() {
       // ---- DOM refs ----
       const fileInput = document.getElementById('fileInput');
@@ -807,7 +803,7 @@
       const giacongContainer = document.getElementById('giacongCardContainer');
 
       // ---- config ----
-      const BACKEND_URL = 'https://pdf-merge-backend-example.com'; // placeholder
+      const BACKEND_URL = 'https://pdf-merge-backend-example.com';
 
       let selectedFile = null;
 
@@ -835,7 +831,8 @@
           this.classList.add('active');
           const shape = this.dataset.shape;
           ellipseRow.style.display = (shape === 'ellipse') ? 'grid' : 'none';
-          rotationRow.style.display = (shape === 'rect' || shape === 'circle' || shape === 'ellipse') ? 'none' : 'flex';
+          rotationRow.style.display = (shape === 'rect' || shape === 'circle' || shape === 'ellipse') ? 'none' :
+          'flex';
           gridRow.style.display = (shape === 'custom') ? 'block' : 'none';
         });
       });
@@ -849,10 +846,10 @@
         }
       });
 
-      // ---- file drop ----
-      // Sự kiện click cho dropzone (mở hộp thoại chọn file)
+      // ---- FILE HANDLING (sửa để đảm bảo click hoạt động) ----
+      // Sự kiện click trực tiếp trên dropzone
       dropzone.addEventListener('click', function(e) {
-        // Không cần kiểm tra gì thêm, vì fileInput.click() sẽ mở hộp thoại
+        // Kiểm tra nếu click vào tooltip (pointer-events: none) thì không ảnh hưởng
         fileInput.click();
       });
 
@@ -872,12 +869,12 @@
         }
       });
 
-      // Sự kiện change của file input
+      // Sự kiện change của input file
       fileInput.addEventListener('change', (e) => {
         if (e.target.files.length) {
           handleFile(e.target.files[0]);
         }
-        // Reset value để cho phép chọn cùng file lần nữa
+        // Reset để cho phép chọn cùng file lần nữa
         fileInput.value = '';
       });
 
@@ -908,7 +905,8 @@
         const shape = document.querySelector('.shape-btn.active').dataset.shape;
 
         const pageCount = 12;
-        previewCount.textContent = `Dự kiến ${pageCount} tem trên khổ ${w}×${h} mm, khe hở ${gapVal}mm, bù nền ${bleed}mm`;
+        previewCount.textContent =
+          `Dự kiến ${pageCount} tem trên khổ ${w}×${h} mm, khe hở ${gapVal}mm, bù nền ${bleed}mm`;
         const svg = previewSvg;
         const viewW = 300,
           viewH = 400;
@@ -933,7 +931,8 @@
                 cy = y + itemH / 2,
                 rx = itemW / 2 - 2,
                 ry = itemH / 2 - 2;
-              elem = `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1.2"/>`;
+              elem =
+                `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1.2"/>`;
             } else {
               elem =
                 `<rect x="${x+2}" y="${y+2}" width="${itemW-4}" height="${itemH-4}" rx="2" fill="#dbe7f4" stroke="#0b2b4a" stroke-width="1.2"/>`;
@@ -987,16 +986,16 @@
       }
       updateGiacongCard();
 
-      // ---- backend url ----
       backendUrlText.textContent = BACKEND_URL;
 
-      // ---- update gia công on change ----
       [quantityNeeded, laminationSelect, finishingSelect, ocTypeSelect, insertProductionTextOn].forEach(el => {
         el.addEventListener('change', updateGiacongCard);
       });
 
-      // ---- trigger initial shape ----
       document.querySelector('.shape-btn.active').click();
+
+      // Log để debug (có thể xóa)
+      console.log('Dropzone click handler ready.');
     })();
   </script>
 </body>
