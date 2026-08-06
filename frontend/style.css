@@ -109,6 +109,42 @@ h1 {
   font-size: 0.9rem;
 }
 
+.sample-guide-wrap {
+  margin-bottom: 14px;
+}
+
+.sample-guide-toggle {
+  background: none;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  color: var(--green-dark);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.sample-guide-toggle:hover {
+  border-color: var(--green-btn);
+  background: #f5f7f2;
+}
+
+.sample-guide-panel {
+  margin-top: 10px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.sample-guide-panel img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 .dropzone {
   border: 2px dashed #b9b7ac;
   border-radius: 4px;
