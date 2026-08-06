@@ -30,7 +30,8 @@
             <button type="button" class="shape-btn" data-shape="circle">Tem Tròn</button>
             <button type="button" class="shape-btn" data-shape="ellipse">Tem Elip</button>
             <button type="button" class="shape-btn" data-shape="custom">Tem Hình bất kỳ</button>
-          </div>          
+          </div>
+          <p class="shape-hint" id="shapeHint">Lưới đều, ghép sát theo cạnh.</p>
         </div>
 
         <div class="dropzone" id="dropzone">
@@ -38,7 +39,6 @@
           <div class="dropzone-inner">
             <p class="drop-filename" id="dropFilename">Chưa chọn file</p>
             <p class="drop-hint" id="dropHint">Kéo thả file PDF vào đây, hoặc bấm để chọn file</p>
-            <p class="drop-hint" id="dropHint">Lưu ý: Tem phải để ở trong trang pdf và mỗi tem phải để ở 1 trang - không có ghi chú và các text trên trang</p>            
           </div>
         </div>
 
@@ -147,8 +147,8 @@
             <div class="field">
               <label>Gia công</label>
               <select id="finishingSelect" class="paper-preset-select">
-                <option value="">— Không gia công —</option>
-                <option value="kẻ thành phẩm">Kẻ thành phẩm</option>
+                <option value="">— Chưa chọn —</option>
+                <option value="xén thành phẩm">Xén thành phẩm</option>
                 <option value="bế thành phẩm">Bế thành phẩm</option>
               </select>
             </div>
@@ -184,7 +184,7 @@
           <h2>Kết quả</h2>
           <p class="result-status" id="resultStatus">Chưa có file nào được ghép.</p>
           <div class="cold-start-note" id="coldStartNote" style="display:none;">
-            Máy chủ có thể đang khởi động lại sau thời gian không dùng — quá trình này
+            Máy chủ có thể đang khởi động lại sau thời gian không dùng (gói free) — quá trình này
             mất tới 50 giây, xin đợi thêm.
           </div>
           <a id="downloadLink" class="download-link" style="display:none;" download>⬇ Tải file đã ghép</a>
