@@ -277,7 +277,9 @@ def repeat_custom_shape_layout(input_pdf, output_pdf, gap_mm, paper_w_mm, paper_
                 target = fitz.Rect(p["x_pt"], p["y_pt"], p["x_pt"] + p["w_pt"], p["y_pt"] + p["h_pt"])
                 out_page.show_pdf_page(target, src_doc, page_index, clip=bat_rect, rotate=p["rot"])
 
+            # Oc be (dau dinh vi may be) - chen len TAT CA cac trang (noi dung + khuon)
             draw_registration_marks(out_page, sheet_w_pt, sheet_h_pt, oc_type)
+            # Lenh san xuat - chi chen len trang noi dung (trang in that su)
             insert_production_text(out_page, production_text, sheet_w_pt)
 
             tmpl_page = dst_doc.new_page(width=sheet_w_pt, height=sheet_h_pt)
@@ -291,6 +293,9 @@ def repeat_custom_shape_layout(input_pdf, output_pdf, gap_mm, paper_w_mm, paper_
             info = (f"Trang {page_index+1}: {len(placements)} hinh | Nguon: {source_used} | "
                     f"Xoay: {'Co' if allow_rotation else 'Khong'} | Gap: {gap_mm}mm | Kho: {paper_w_mm}x{paper_h_mm}mm")
             tmpl_page.insert_text(fitz.Point(10, 15), info, fontsize=8, color=(0,0,1))
+
+            # Oc be (dau dinh vi may be) - chen len TAT CA cac trang (noi dung + khuon)
+            draw_registration_marks(tmpl_page, sheet_w_pt, sheet_h_pt, oc_type)
 
         dst_doc.save(output_pdf)
         return True, None
