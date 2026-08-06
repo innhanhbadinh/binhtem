@@ -34,6 +34,15 @@
           <p class="shape-hint" id="shapeHint">Lưới đều, ghép sát theo cạnh.</p>
         </div>
 
+        <div class="sample-guide-wrap">
+          <button type="button" class="sample-guide-toggle" id="sampleGuideToggle">
+            📄 Xem hướng dẫn chuẩn bị file PDF mẫu
+          </button>
+          <div class="sample-guide-panel" id="sampleGuidePanel" style="display:none;">
+            <img src="sample-guide.svg" alt="Hướng dẫn: kích thước trang PDF phải bằng đúng khung tem, không dư khoảng trắng xung quanh" />
+          </div>
+        </div>
+
         <div class="dropzone" id="dropzone">
           <input type="file" id="fileInput" accept="application/pdf" hidden />
           <div class="dropzone-inner">
