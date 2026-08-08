@@ -6,6 +6,19 @@
 <title>Ghép Tem file PDF</title>
 <link rel="stylesheet" href="style.css" />
 <link rel="stylesheet" href="giacong-card.css" />
+
+<!-- ===== Google Analytics (GA4) — thong ke luot truy cap + khu vuc khach hang =====
+     Thay "G-XXXXXXXXXX" bang Measurement ID that cua ban (lay tu analytics.google.com
+     sau khi tao 1 "Data stream" kieu Web cho trang nay). Xem huong dan trong README.
+     Neu chua co ID, cu de nguyen "G-P914JNMSZ6" - trang van chay binh thuong,
+     chi la chua ghi nhan luot truy cap thoi. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P914JNMSZ6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-P914JNMSZ6');
+</script>
 </head>
 <body>
   <header class="topbar"></header>
@@ -31,7 +44,7 @@
             <button type="button" class="shape-btn" data-shape="ellipse">Tem Elip</button>
             <button type="button" class="shape-btn" data-shape="custom">Tem Hình bất kỳ</button>
           </div>
-          <p class="shape-hint" id="shapeHint">Xếp tem tối ưu tiết kiệm chi phí.</p>
+          <p class="shape-hint" id="shapeHint">Lưới đều, ghép sát theo cạnh.</p>
         </div>
 
         <div class="sample-guide-wrap">
@@ -156,8 +169,8 @@
             <div class="field">
               <label>Gia công</label>
               <select id="finishingSelect" class="paper-preset-select">
-                <option value="">— Không gia công —</option>
-                <option value="kẻ thành phẩm">Kẻ thành phẩm</option>
+                <option value="">— Chưa chọn —</option>
+                <option value="xén thành phẩm">Xén thành phẩm</option>
                 <option value="bế thành phẩm">Bế thành phẩm</option>
               </select>
             </div>
@@ -178,6 +191,11 @@
             <input type="checkbox" id="insertProductionTextOn" checked />
             Chèn Lệnh sản xuất lên file PDF (cách mép 7mm)
           </label>
+        </div>
+
+        <div class="field">
+          <label>Mật khẩu tải file <span class="required-mark">*</span></label>
+          <input type="password" id="downloadPassword" placeholder="Nhập mật khẩu do In Nhanh Ba Đình cấp" autocomplete="off" />
         </div>
 
         <div class="btn-row">
