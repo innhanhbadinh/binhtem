@@ -10,6 +10,10 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
+# Mat khau tai file dung cho test - can co gia tri de khong bao 503 "chua cau hinh"
+TEST_DOWNLOAD_PASSWORD = "test-password-123"
+os.environ.setdefault("DOWNLOAD_PASSWORD", TEST_DOWNLOAD_PASSWORD)
+
 from fastapi.testclient import TestClient
 from app.main import app
 
@@ -26,12 +30,15 @@ def test_health_check():
     assert r.json()["status"] == "ok"
 
 
-def _post_ghep(path, data):
+def _post_ghep(path, data, password=TEST_DOWNLOAD_PASSWORD):
+    full_data = dict(data)
+    if password is not None:
+        full_data["download_password"] = password
     with open(path, "rb") as f:
         return client.post(
             "/api/ghep",
             files={"file": ("test.pdf", f, "application/pdf")},
-            data=data,
+            data=full_data,
         )
 
 
@@ -125,9 +132,48 @@ def test_ghep_non_pdf_file_returns_400():
     r = client.post(
         "/api/ghep",
         files={"file": ("test.txt", b"hello", "text/plain")},
-        data={"shape": "rect", "paper_w": 200, "paper_h": 200, "gap": 2},
+        data={"shape": "rect", "paper_w": 200, "paper_h": 200, "gap": 2,
+              "download_password": TEST_DOWNLOAD_PASSWORD},
     )
     assert r.status_code == 400
+
+
+def test_ghep_missing_password_returns_422():
+    r = _post_ghep(STAR_PDF, {"shape": "rect", "paper_w": 320, "paper_h": 430, "gap": 2}, password=None)
+    assert r.status_code == 422
+
+
+def test_ghep_wrong_password_returns_403():
+    r = _post_ghep(STAR_PDF, {"shape": "rect", "paper_w": 320, "paper_h": 430, "gap": 2},
+                    password="mat-khau-sai")
+    assert r.status_code == 403
+    assert "không đúng" in r.json()["detail"].lower()
+
+
+def test_ghep_correct_password_succeeds():
+    r = _post_ghep(STAR_PDF, {"shape": "rect", "paper_w": 320, "paper_h": 430, "gap": 2})
+    assert r.status_code == 200
+
+
+def test_ghep_missing_server_password_config_returns_503():
+    old_pass = os.environ.pop("DOWNLOAD_PASSWORD", None)
+    try:
+        r = _post_ghep(STAR_PDF, {"shape": "rect", "paper_w": 320, "paper_h": 430, "gap": 2})
+        assert r.status_code == 503
+    finally:
+        if old_pass is not None:
+            os.environ["DOWNLOAD_PASSWORD"] = old_pass
+
+
+def test_preview_does_not_require_password():
+    """Xem truoc KHONG can mat khau - chi ghep/tai file that moi can."""
+    with open(STAR_PDF, "rb") as f:
+        r = client.post(
+            "/api/preview",
+            files={"file": ("test.pdf", f, "application/pdf")},
+            data={"shape": "rect", "paper_w": 320, "paper_h": 430, "gap": 2},
+        )
+    assert r.status_code == 200
 
 
 def test_ghep_invalid_oc_type_returns_400():
