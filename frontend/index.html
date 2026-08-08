@@ -10,7 +10,7 @@
 <!-- ===== Google Analytics (GA4) — thong ke luot truy cap + khu vuc khach hang =====
      Thay "G-XXXXXXXXXX" bang Measurement ID that cua ban (lay tu analytics.google.com
      sau khi tao 1 "Data stream" kieu Web cho trang nay). Xem huong dan trong README.
-     Neu chua co ID, cu de nguyen "G-P914JNMSZ6" - trang van chay binh thuong,
+     Neu chua co ID, cu de nguyen "G-XXXXXXXXXX" - trang van chay binh thuong,
      chi la chua ghi nhan luot truy cap thoi. -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-P914JNMSZ6"></script>
 <script>
@@ -44,7 +44,7 @@
             <button type="button" class="shape-btn" data-shape="ellipse">Tem Elip</button>
             <button type="button" class="shape-btn" data-shape="custom">Tem Hình bất kỳ</button>
           </div>
-          <p class="shape-hint" id="shapeHint">Ghép thẳng hàng</p>
+          <p class="shape-hint" id="shapeHint">Lưới đều, ghép sát theo cạnh.</p>
         </div>
 
         <div class="sample-guide-wrap">
@@ -169,7 +169,7 @@
             <div class="field">
               <label>Gia công</label>
               <select id="finishingSelect" class="paper-preset-select">
-                <option value="">— Không gia công —</option>
+                <option value="">— Chưa chọn —</option>
                 <option value="kẻ thành phẩm">Kẻ thành phẩm</option>
                 <option value="bế thành phẩm">Bế thành phẩm</option>
               </select>
@@ -194,8 +194,11 @@
         </div>
 
         <div class="field">
-          <label>Mật khẩu tải file (Liên hệ với In Nhanh Ba Đình để lấy mật khẩu)</label>
-          <input type="password" id="downloadPassword" placeholder="0567.779.888" autocomplete="off" /><span class="required-mark">*</span>
+          <label>Mật khẩu tải file <span class="required-mark">*</span></label>
+          <div class="password-field-wrap">
+            <input type="password" id="downloadPassword" placeholder="0567.779.888" autocomplete="off" />
+            <button type="button" class="password-toggle-btn" id="passwordToggleBtn" aria-label="Hiện mật khẩu">👁️</button>
+          </div>
         </div>
 
         <div class="btn-row">
