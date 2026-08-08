@@ -1,5 +1,5 @@
 """
-Backend FastAPI cho web app "Ghep PDF" - In Nhanh Ba Dinh.
+Backend FastAPI cho web app "Ghep Tem PDF" - In Nhanh Ba Dinh.
 
 Endpoints:
     POST /api/ghep     - ghep PDF that su, tra ve file .pdf
@@ -64,6 +64,23 @@ def _validate_common(file: UploadFile, shape: str, paper_w: float, paper_h: floa
 FORBIDDEN_FILENAME_CHARS = re.compile(r'[\\/:*?"<>|\r\n\t]')
 
 
+def _check_download_password(password: str):
+    """
+    Kiem tra mat khau tai file - dung 1 mat khau CHUNG, CO DINH cho tat ca
+    khach hang (khong phai moi khach 1 ma rieng). Luu trong bien moi truong
+    DOWNLOAD_PASSWORD tren Render - chu shop tu doi bat cu luc nao, khong can
+    sua code/deploy lai.
+    """
+    correct_password = os.environ.get("DOWNLOAD_PASSWORD")
+    if not correct_password:
+        raise HTTPException(
+            status_code=503,
+            detail="Server chưa được cấu hình mật khẩu tải file (thiếu DOWNLOAD_PASSWORD).",
+        )
+    if not password or password != correct_password:
+        raise HTTPException(status_code=403, detail="Mật khẩu không đúng.")
+
+
 def _sanitize_filename(name: str, fallback: str) -> str:
     """
     Lam sach ten file goi y tu frontend (filename_hint) truoc khi dung lam ten
@@ -101,11 +118,13 @@ async def ghep_pdf(
     filename_hint: str = Form(""),  # ten file goi y tu frontend (tu noi dung Lenh san xuat)
     oc_type: str = Form("none"),  # "none" | "tron" | "vuong" - oc be cho may be
     production_text: str = Form(""),  # noi dung Lenh san xuat chen len trang 1, cach mep 7mm
+    download_password: str = Form(...),  # mat khau chung, co dinh - bat buoc de tai file
 ):
     if oc_type not in ("none", "tron", "vuong"):
         raise HTTPException(status_code=400, detail=f"Loai oc be khong hop le: {oc_type}")
 
     _validate_common(file, shape, paper_w, paper_h, ellipse_w, ellipse_h)
+    _check_download_password(download_password)
 
     work_dir = tempfile.mkdtemp(prefix="ghep_")
     input_path = os.path.join(work_dir, "input.pdf")
