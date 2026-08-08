@@ -1,5 +1,5 @@
 const shapeHints = {
-  rect: "Lưới đều, ghép sát theo cạnh.",
+  rect: "Ghép thẳng",
   circle: "Ghép kiểu tổ ong (so le) — tối ưu hơn ghép vuông thông thường.",
   ellipse: "Ghép lưới elip, có thể xoay để chọn hướng khít nhất.",
   custom: "Tự đọc đường bế (die-line) từ file PDF và ghép khít bằng thuật toán nesting.",
@@ -267,10 +267,17 @@ async function submitGhep() {
   const formData = buildValidatedFormData();
   if (!formData) return;
 
+  const downloadPassword = document.getElementById("downloadPassword").value;
+  if (!downloadPassword) {
+    errorText.textContent = "Vui lòng nhập mật khẩu tải file trước khi ghép.";
+    return;
+  }
+
   formData.append("filename_hint", buildOutputFilename());
   formData.append("oc_type", document.getElementById("ocTypeSelect").value);
   const insertProdText = document.getElementById("insertProductionTextOn").checked;
   formData.append("production_text", insertProdText ? buildGiacongAutoText() : "");
+  formData.append("download_password", downloadPassword);
 
   submitBtn.disabled = true;
   previewBtn.disabled = true;
