@@ -195,6 +195,28 @@ deploy lại gì cả. Gõ lại thành `FALSE` (hoặc xoá trống) để mở
 **Nếu chưa cấu hình đủ 2 biến trên**: server sẽ từ chối tất cả yêu cầu ghép
 PDF với lỗi rõ ràng (503 - chưa cấu hình Google Sheets).
 
+> Lưu ý: hiện tại tính năng 2b/2c (email + Google Sheets) đã được **tạm ẩn**
+> (không bắt buộc dùng) theo yêu cầu trước đó — code vẫn còn trong repo, sẵn
+> sàng bật lại khi cần. Nếu bạn không dùng 2 mục trên, có thể bỏ qua.
+
+## 2d. Mật khẩu tải file (cố định, tự đổi khi cần)
+
+Mỗi lần bấm "Ghép PDF" (không tính "Xem trước"), khách phải nhập đúng **1 mật
+khẩu chung** mới tải được file — khác với mục 2c (mỗi khách 1 mã riêng), đây
+chỉ là **1 mật khẩu duy nhất dùng chung cho tất cả**, đơn giản hơn nhiều.
+
+**Cách cấu hình:**
+
+1. Vào Render → service backend → tab **Environment**
+2. Thêm biến `DOWNLOAD_PASSWORD` = mật khẩu bạn muốn dùng (ví dụ `Badinh2026`)
+3. **Save Changes** — Render tự khởi động lại, mật khẩu mới có hiệu lực ngay
+
+**Đổi mật khẩu sau này:** quay lại đúng chỗ trên, sửa lại giá trị biến
+`DOWNLOAD_PASSWORD`, Save — không cần sửa code, không cần deploy lại thủ công.
+
+**Nếu chưa cấu hình `DOWNLOAD_PASSWORD`**: server từ chối toàn bộ yêu cầu ghép
+PDF (503 - an toàn mặc định, tránh quên cấu hình mà vô tình mở public).
+
 ## 3. Deploy frontend lên GitHub Pages
 
 > ⚠️ **Lỗi 404 thường gặp**: GitHub Pages kiểu "Deploy from a branch" chỉ cho chọn
@@ -230,6 +252,40 @@ chọn "Deploy from a branch" → branch `gh-pages` → folder `/ (root)`.
 Cũng được — vì đây chỉ là HTML/CSS/JS tĩnh, không cần build step. Chỉ cần trỏ
 "Root Directory" của Vercel/Netlify vào thư mục `frontend/` (2 dịch vụ này cho
 chọn thư mục con trực tiếp, không bị giới hạn như GitHub Pages kiểu branch).
+
+## 3b. Thống kê lượt truy cập + khu vực khách hàng (Google Analytics)
+
+Trang web đã có sẵn đoạn mã Google Analytics (GA4) trong `frontend/index.html`
+— chỉ cần bạn thay đúng **Measurement ID** của mình vào là bắt đầu ghi nhận số
+liệu.
+
+**Bước 1 — Tạo tài khoản/thuộc tính Google Analytics:**
+
+1. Vào **analytics.google.com** (dùng chung tài khoản Gmail đã có)
+2. Tạo **Account** mới (nếu chưa có) → đặt tên bất kỳ, ví dụ "In Nhanh Ba Đình"
+3. Tạo **Property** mới → đặt tên "Ghép PDF Web" → chọn múi giờ Việt Nam
+4. Ở bước "Data collection" → chọn nền tảng **Web**
+5. Nhập URL trang web thật của bạn (ví dụ `https://innhanhbadinh.github.io/binhtem/`)
+6. Google sẽ cấp cho bạn 1 **Measurement ID** dạng `G-XXXXXXXXXX` — copy lại
+
+**Bước 2 — Dán vào code:**
+
+Mở file `frontend/index.html`, tìm 2 chỗ có chữ `G-XXXXXXXXXX` (nằm ngay đầu
+file, trong thẻ `<head>`), thay cả 2 chỗ bằng đúng Measurement ID vừa copy.
+Lưu, commit, đợi deploy lại.
+
+**Bước 3 — Xem thống kê:**
+
+Sau khi có khách truy cập thật (có thể mất vài giờ mới lên đủ dữ liệu), vào lại
+analytics.google.com → chọn đúng Property → xem các mục:
+
+- **Báo cáo → Thời gian thực (Realtime)**: xem ai đang truy cập ngay lúc này
+- **Báo cáo → Vòng đời → Thu hút người dùng (Acquisition)**: tổng số lượt truy cập theo thời gian
+- **Báo cáo → Người dùng → Thông tin nhân khẩu học (Demographics) → Khu vực (Geographic details)**:
+  xem khách truy cập đến từ tỉnh/thành nào, quốc gia nào
+
+> Miễn phí hoàn toàn, không giới hạn số lượt truy cập cho quy mô 1 trang web nhỏ
+> như thế này.
 
 ## 4. Bảo mật CORS (khuyến nghị khi lên production)
 
