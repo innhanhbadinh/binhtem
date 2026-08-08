@@ -1,8 +1,8 @@
 const shapeHints = {
   rect: "Ghép thẳng",
   circle: "Ghép kiểu tổ ong (so le) — tối ưu hơn ghép vuông thông thường.",
-  ellipse: "Ghép lưới elip, có thể xoay để chọn hướng khít nhất.",
-  custom: "Tự đọc đường bế (die-line) từ file PDF và ghép khít bằng thuật toán nesting.",
+  ellipse: "Ghép lưới elip, có thể xoay để chọn ghép sát nhất.",
+  custom: "Tự đọc đường bế từ file PDF và ghép sát bằng thuật toán nesting.",
 };
 
 let currentShape = "rect";
